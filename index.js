@@ -9,13 +9,11 @@ const date = require(__dirname + "/date.js");
 const app = express();
 
 // set an array for the default items in the list
-let items = ["Buy Food", "Prepare Food", "Cook Food", "Eat Food"];
+let funitems = ["Paint Painting", "Go Hiking", "Go Surfing", "Do Programming", "Draw Portrait"];
 // set an empty array for new work items
-let workItems = ["Show Up"];
-// create new array for fun items
-let funItems = ["Watch TV", "Read a Book"];
-// set an empty array for new weekend items
-let weekendItems = ["Relax", "Watch TV"];
+let weekendItems = ["Study for School", "Go to Beach", "Self Imporvement Time"];
+
+// setup an array for Fun and another for Weekend
 
 // set EJS as the viewing engine to display html
 app.set('view engine', 'ejs');
@@ -33,7 +31,7 @@ app.get("/", function(req, res) {
     let day = date.getDate();
     
     // use EJS render to display the day and the To Do List
-    res.render("list", {listTitle: day, newListItems: items});
+    res.render("list", {listTitle: "Fun List", day, newListItems: funitems});
     
 });
 
@@ -44,47 +42,30 @@ app.post("/", function(req, res) {
     let item = req.body.newItem;
     
     // if route is /work, add to work list
-    if (req.body.list === "Work") {
-        workItems.push(item);
-        res.redirect("/work");
-    } 
-    
-    // if route is /fun, add to fun list
-    else if (req.body.list === "Fun") {
-        funItems.push(item);
-        res.redirect("/fun");
-    } 
-
-    // if route is /weekend, add to fun list
-    else if (req.body.list === "Weekend") {
+  // if list === Fun then go to /fun
+  // if list ==== Weekend then go to /weekend
+  
+    if (req.body.list === "Weekend") {
         weekendItems.push(item);
         res.redirect("/weekend");
-    }
-
+    } 
+    
     else {
         items.push(item);
         res.redirect("/");
     }
 });
 
-// display work to do list on the localhost:3000/work route!
-app.get("/work", function(req, res){
-
-  let day = date.getDate();
-    res.render("list", {listTitle: "Work To Do List", newListItems: workItems})
-});
-
-// display fun to do list
-app.get("/fun", function(req, res){
-
-  let day = date.getDate();
-    res.render("list", {listTitle: "Fun To Do List", newListItems: funItems})
-});
-
-// display weekend to do list
+// display default to do list on the localhost:3000/work route!
 app.get("/weekend", function(req, res){
-    res.render("list", {listTitle: "Weekend To Do List", newListItems: weekendItems})
+
+  let day = date.getDate();
+  
+    res.render("list", {listTitle: "Weekend Items To-Do List", newListItems: weekendItems})
 });
+
+// add a app.get for every route - /fun and /weekend
+// Make sure your listTitle starts off with Fun Items and Weekend Items
 
 app.listen(3000, function() {
 console.log ("Server is running on port 3000")
